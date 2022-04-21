@@ -33,7 +33,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     @Override
-    /*зодание активити 2022_04_18*/
+    /*зодание активити 2022_04_18, проверка*/
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
