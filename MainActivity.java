@@ -17,7 +17,7 @@ public class MainActivity extends AppCompatActivity {
 
     private EditText pass;
     private Button btn, btn_sum, btn_sub, btn_mul, btn_div;
-    private Button btn_eqa, btn_com, btn_clr, btn_brckt1, btn_brckt2, btn_his;
+    private Button btn_eqa, btn_com, btn_clr, btn_brckt1, btn_brckt2, btn_his, btn_rebar;
     private ImageButton btn_bspc;
     ArrayList<String> his_arr = new ArrayList();
     //String[] his_arr = {" ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " "};
@@ -60,6 +60,7 @@ public class MainActivity extends AppCompatActivity {
         btn_brckt1 = (Button) findViewById(R.id.nbrckt1);
         btn_brckt2 = (Button) findViewById(R.id.nbrckt2);*/
         btn_his = (Button) findViewById(R.id.nhstr);
+        btn_rebar = (Button) findViewById(R.id.b_rebar);
         btn_bspc = (ImageButton) findViewById(R.id.nbspc);
         final TextView resText = (TextView) findViewById(R.id.Result);
         final TextView resText_2 = (TextView) findViewById(R.id.Result_2);
@@ -102,7 +103,6 @@ public class MainActivity extends AppCompatActivity {
                     }
                 }
         );*/
-
         /*btn_com.setOnClickListener(
                 new View.OnClickListener() {
                     @Override
@@ -172,6 +172,17 @@ public class MainActivity extends AppCompatActivity {
                         resText.setText(resum);
                         /*resum.substring(0, resum.length()-1));
                           resum.replaceAll(".$","")*/
+                    }
+                }
+        );
+        btn_rebar.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Intent intent_his = new Intent(".Activity_rebar"); /*переход на активити rebar*/
+                        //intent_his.putExtra("name",sv_n);
+                        //intent_his.putExtra("name", his_arr);
+                        startActivity(intent_his);
                     }
                 }
         );
