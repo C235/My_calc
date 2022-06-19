@@ -37,7 +37,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        addListenerOnButton();
+        addListenerOnButton();                          //создание слушателя кнопок
 
         final TextView resText = (TextView) findViewById(R.id.Result);
         Intent intent = getIntent();
@@ -63,7 +63,7 @@ public class MainActivity extends AppCompatActivity {
         btn_rebar = (Button) findViewById(R.id.b_rebar);
         btn_bspc = (ImageButton) findViewById(R.id.nbspc);
         final TextView resText = (TextView) findViewById(R.id.Result);
-        final TextView resText_2 = (TextView) findViewById(R.id.Result_2);
+        final TextView resText_2 = (TextView) findViewById(R.id.Res_count);
         final TextView history1 = (TextView) findViewById(R.id.his1);
 
         /*btn_sum.setOnClickListener(
@@ -191,7 +191,7 @@ public class MainActivity extends AppCompatActivity {
     public void calcListener(View view) {
 
         final TextView resText = (TextView) findViewById(R.id.Result);
-        final TextView resText_2 = (TextView) findViewById(R.id.Result_2);
+        final TextView resText_2 = (TextView) findViewById(R.id.Res_count);
 
         switch (view.getId()) {
 
