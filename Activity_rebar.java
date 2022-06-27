@@ -19,9 +19,11 @@ public class Activity_rebar extends AppCompatActivity {
     private String[] сlRebar = {"A500", "A400", "A240"};
     private String[] boundaryСond = {"З-З", "З-Ш", "Ш-Ш"};
     private Button btn_count;
-    String[] sh = {" "," "," "," "};
-    String sh4, sh5, sh6, sh7, sh8;
-    String sh9;
+    String sh_con = " ";
+    String sh_reb = " ";
+    String sh = " ";
+    String sh_q, sh_qn, sh6, sh7, sh8, sh9;
+    Rebar act_result = new Rebar();
 
 
     @Override
@@ -33,10 +35,10 @@ public class Activity_rebar extends AppCompatActivity {
 
         final EditText eText4 = findViewById(R.id.editTextNumberDecimal_q);
         final EditText eText5 = findViewById(R.id.editTextNumberDecimal_qn);
-        final EditText eText6 = findViewById(R.id.editTextNumberDecimal3);
-        final EditText eText7 = findViewById(R.id.editTextNumberDecimal2);
-        final EditText eText8 = findViewById(R.id.editTextNumberDecimal);
-        final EditText eText9 = findViewById(R.id.editTextNumberDecimal4);
+        final EditText eText6 = findViewById(R.id.editTextNumberDecimalL);
+        final EditText eText7 = findViewById(R.id.editTextNumberDecimaH);
+        final EditText eText8 = findViewById(R.id.editTextNumberDecimalB);
+        final EditText eText9 = findViewById(R.id.editTextNumberDecimaA0);
 
         eText4.setOnKeyListener(new View.OnKeyListener(){
             @Override
@@ -44,7 +46,7 @@ public class Activity_rebar extends AppCompatActivity {
                 if(event.getAction() == KeyEvent.ACTION_DOWN &&
                         (keyCode == KeyEvent.KEYCODE_ENTER))
                 {
-                    sh4 = eText4.getText().toString();
+                    sh_q = eText4.getText().toString();
                     return true;
                 }
                 return false;
@@ -58,7 +60,7 @@ public class Activity_rebar extends AppCompatActivity {
                 if(event.getAction() == KeyEvent.ACTION_DOWN &&
                         (keyCode == KeyEvent.KEYCODE_ENTER))
                 {
-                    sh5 = eText5.getText().toString();
+                    sh_qn = eText5.getText().toString();
                     return true;
                 }
                 return false;
@@ -131,7 +133,7 @@ public class Activity_rebar extends AppCompatActivity {
         spClConcrete.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                sh[0] = parent.getSelectedItem().toString();
+                sh_con = parent.getSelectedItem().toString();
 
             }
             @Override
@@ -146,7 +148,7 @@ public class Activity_rebar extends AppCompatActivity {
         spClRebar.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                sh[1] = parent.getSelectedItem().toString();
+                sh_reb = parent.getSelectedItem().toString();
 
             }
 
@@ -162,7 +164,7 @@ public class Activity_rebar extends AppCompatActivity {
         spBoundaryСond.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                sh[2] = parent.getSelectedItem().toString();
+                sh = parent.getSelectedItem().toString();
 
             }
 
@@ -182,7 +184,9 @@ public class Activity_rebar extends AppCompatActivity {
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        resText.setText(sh[0]+" "+sh[1]+" "+sh[2]+" "+sh4+" "+sh5+" "+sh6+" "+sh7+" "+sh8+" "+sh9);
+                        resText.setText(act_result.ProvideMy( sh_con, sh_reb, sh,
+                                Double.parseDouble(sh_q), Double.parseDouble(sh_qn), Double.parseDouble(sh7),
+                                Double.parseDouble(sh8), Double.parseDouble(sh6), Double.parseDouble(sh9)));
                     }
                 });
     };

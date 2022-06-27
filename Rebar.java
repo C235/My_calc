@@ -4,7 +4,6 @@ import static java.lang.Math.sqrt;
 
 public class Rebar {
     String ProvideMy(String con,String reb,String sh, double q, double qn, double h, double b, double l, double a){
-        //int[] BM = {20, 25, 30};
         int[] RbM = {10350, 13050, 15300};
         int[] RbtserM = {1350, 1550, 1750};
         int[] RbserM = {15000, 18500, 22000};
@@ -16,7 +15,7 @@ public class Rebar {
         double[][] As = {{3,4,5,6,8,10,12,14,16,18,20,22,25,28,32,36,40},
                 {0.071, 0.126, 0.196, 0.283, 0.503, 0.785, 1.131, 1.539, 2.011, 2.545, 3.142, 3.801, 4.909, 6.158, 8.042, 10.179, 12.566}};
         double Mpr, Aopr, n1, Astrpr, n, dspr, Aspr, teta;
-        String result;
+        String result = "net";
         double ho = h - a;
         Aopr = 0;
         int Rb, Rbtser, Rbser, Rs, Rsc;
@@ -93,6 +92,12 @@ public class Rebar {
             case "З-Ш" :{
                 Mpr = q * l * l / 16;
                 Aopr = Mpr / (Rb * b * ho * ho);
+                if (Aopr > 0.4) result = "Ao > 0.4";
+                else{
+                    teta = (1 + sqrt(1 - 2 * Aopr)) / 2;
+                    Astrpr = Mpr / (Rs * teta * ho);
+                    result = "требуемое количество " + String.valueOf(Astrpr) + "см2";
+                }
                 //System.out.println("значение Mpr = " + Mpr);
                 //System.out.println("значение Aopr= " + Aopr);
                 break;
@@ -100,6 +105,12 @@ public class Rebar {
             case "Ш-Ш" :{
                 Mpr = q * l * l / 8;
                 Aopr = Mpr / (Rb * b * ho * ho);
+                if (Aopr > 0.4) result = "Ao > 0.4";
+                else{
+                    teta = (1 + sqrt(1 - 2 * Aopr)) / 2;
+                    Astrpr = Mpr / (Rs * teta * ho);
+                    result = "требуемое количество " + String.valueOf(Astrpr) + "см2";
+                }
                 //System.out.println("значение Mpr = " + Mpr);
                 //System.out.println("значение Aopr= " + Aopr);
                 break;
@@ -107,14 +118,20 @@ public class Rebar {
             case "К" : {
                 Mpr = q * l * l / 2;
                 Aopr = Mpr / (Rb * b * ho * ho);
+                if (Aopr > 0.4) result = "Ao > 0.4";
+                else{
+                    teta = (1 + sqrt(1 - 2 * Aopr)) / 2;
+                    Astrpr = Mpr / (Rs * teta * ho);
+                    result = "требуемое количество " + String.valueOf(Astrpr) + "см2";
+                }
                 //System.out.println("значение Mpr = " + Mpr);
                 //System.out.println("значение Aopr= " + Aopr);
                 break;
             }
         }
-        return Double.toString(Aopr);
+        return result;
     }
-    public static void main (String args[]){
+    /*public static void main (String args[]){
         double[][] As = {{3,4,5,6,8,10,12,14,16,18,20,22,25,28,32,36,40},
                 {0.071, 0.126, 0.196, 0.283, 0.503, 0.785, 1.131, 1.539, 2.011, 2.545, 3.142, 3.801, 4.909, 6.158, 8.042, 10.179, 12.566}};
        Rebar k1 = new Rebar();
@@ -122,5 +139,5 @@ public class Rebar {
         System.out.println("значение As l1= " + As[0].length);
         System.out.println("значение As l2= " + As[1].length);
 
-    }
+    }*/
 }
