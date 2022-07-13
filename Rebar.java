@@ -1,9 +1,10 @@
 package com.example.my_calc;
 
-import static java.lang.Math.sqrt;
 
 public class Rebar {
-    String ProvideMy(String con,String reb,String sh, double q, double qn, double h, double b, double l, double a){
+    //private static double a = 0;
+
+    String provideMy(String con,String reb,String sh, double q, double qn, double h, double b, double l, double a){
         int[] RbM = {10350, 13050, 15300};
         int[] RbtserM = {1350, 1550, 1750};
         int[] RbserM = {15000, 18500, 22000};
@@ -14,14 +15,16 @@ public class Rebar {
         double[] EsM = {2e8, 2e8, 2e8, 2e8};
         double[][] As = {{3,4,5,6,8,10,12,14,16,18,20,22,25,28,32,36,40},
                 {0.071, 0.126, 0.196, 0.283, 0.503, 0.785, 1.131, 1.539, 2.011, 2.545, 3.142, 3.801, 4.909, 6.158, 8.042, 10.179, 12.566}};
-        double Mpr, Aopr, n1, Astrpr, n, dspr, Aspr, teta;
+        double Mpr, Mop, Aopr, Aoop, n1, Astrpr, Astrop, n, dspr, Aspr, t_pr, ho, t_op,  D, f, f_dop;
         String result = "net";
-        double ho = h - a;
         Aopr = 0;
         int Rb, Rbtser, Rbser, Rs, Rsc;
         double Eb, Es;
         Rb = 0;
+        Rbser = 0;
         Rs = 0;
+        Es = 0;
+        Rebar_c2 cal = new Rebar_c2();
 
         //расчетные сопротивления бетона
         switch (con){
@@ -75,69 +78,120 @@ public class Rebar {
             }
         }
         //вычисления
-        switch (sh) {
-            case "З-З": {
-                Mpr = q * l * l / 24;
-                Aopr = Mpr / (Rb * b * ho * ho);
-                if (Aopr > 0.4) result = "Ao > 0.4";
-                else{
-                    teta = (1 + sqrt(1 - 2 * Aopr)) / 2;
-                    Astrpr = Mpr / (Rs * teta * ho);
-                    result = "требуемое количество " + String.valueOf(Astrpr) + "см2";
+        if (a == 0) result = "ввидите все значения"; //проверка введенного значения
+                else {
+                        ho = h - a;
+                        switch (sh) {
+                            case "З-З": {
+                                Mpr = q * l * l / 24;
+                                Mop = q * l * l / 12;
+                                Aopr = cal.f_Ao(Mpr, Rb, b, ho);
+                                Aoop = cal.f_Ao(Mop, Rb, b, ho);
+                                if (Aopr > 0.4 | Aoop > 0.4) result = "Ao > 0.4";
+                                else {
+                                    t_pr = cal.f_teta(Aopr);
+                                    t_op = cal.f_teta(Aoop);
+                                    Astrpr = (Mpr * 10000) / (Rs * t_pr * ho);
+                                    Astrop = (Mop * 10000) / (Rs * t_op * ho);
+                                    f_dop = l / cal.f_deflection_n(l);
+                                    D = cal.f_deflection(Es, Rbser, Rb, b, ho, Astrpr);
+                                    f = qn * l * l * l * l / (384 * D);
+                                    Aspr = Astrpr;
+                                    while (f > f_dop) {
+                                        Aspr = Aspr + 0.5;
+                                        D = cal.f_deflection(Es, Rbser, Rb, b, ho, Aspr);
+                                        f = qn * l * l * l * l / (384 * D);
+                                    }
+                                    result = "требуемое количество по прочности\n в пролете " +
+                                            String.format("%.3f", Astrpr) + "(см2)\n" + "на опоре " +
+                                            String.format("%.3f", Astrop) + "(см2)\n\n" +
+                                            "требуемое количество по деформациям\n в пролете " +
+                                            String.format("%.3f", Aspr) + "(см2)\n" +
+                                            "прогиб " +
+                                            String.format("%.3f", f) + "(м)\n" +
+                                            "предельно допустимый прогиб " +
+                                            String.format("%.3f", f_dop) + "(м)";
+                                }
+                                break;
+                            }
+                            case "З-Ш": {
+                                Mpr = q * l * l / 16;
+                                Mop = q * l * l / 8;
+                                Aopr = cal.f_Ao(Mpr, Rb, b, ho);
+                                Aoop = cal.f_Ao(Mop, Rb, b, ho);
+                                if (Aopr > 0.4 | Aoop > 0.4) result = "Ao > 0.4";
+                                else {
+                                    t_pr = cal.f_teta(Aopr);
+                                    t_op = cal.f_teta(Aoop);
+                                    f_dop = l / cal.f_deflection_n(l);
+                                    Astrpr = (Mpr * 10000) / (Rs * t_pr * ho);
+                                    Astrop = (Mop * 10000) / (Rs * t_op * ho);
+                                    D = cal.f_deflection(Es, Rbser, Rb, b, ho, Astrpr);
+                                    f = qn * l * l * l * l / (185 * D);
+                                    Aspr = Astrpr;
+                                    while (f > f_dop) {
+                                        Aspr = Aspr + 0.5;
+                                        D = cal.f_deflection(Es, Rbser, Rb, b, ho, Aspr);
+                                        f = qn * l * l * l * l / (185 * D);
+                                    }
+                                    result = "требуемое количество по прочности\n в пролете " +
+                                            String.format("%.3f", Astrpr) + "(см2)\n" + "на опоре " +
+                                            String.format("%.3f", Astrop) + "(см2)\n\n" +
+                                            "требуемое количество по деформациям\n в пролете " +
+                                            String.format("%.3f", Aspr) + "(см2)\n" +
+                                            "прогиб " +
+                                            String.format("%.3f", f) + "(м)\n" +
+                                            "предельно допустимый прогиб " +
+                                            String.format("%.3f", f_dop) + "(м)";
+                                }
+                                break;
+                            }
+                            case "Ш-Ш": {
+                                Mpr = q * l * l / 8;
+                                Aopr = cal.f_Ao(Mpr, Rb, b, ho);
+                                if (Aopr > 0.4) result = "Ao > 0.4";
+                                else {
+                                    t_pr = cal.f_teta(Aopr);
+                                    Astrpr = (Mpr * 10000) / (Rs * t_pr * ho);
+                                    f_dop = l / cal.f_deflection_n(l);
+                                    D = cal.f_deflection(Es, Rbser, Rb, b, ho, Astrpr);
+                                    f = 5 * qn * l * l * l * l / (384 * D);
+                                    Aspr = Astrpr;
+                                    while (f > f_dop) {
+                                        Aspr = Aspr + 0.5;
+                                        D = cal.f_deflection(Es, Rbser, Rb, b, ho, Aspr);
+                                        f = 5 * qn * l * l * l * l / (384 * D);
+                                    }
+                                    result = "требуемое количество по прочности\n в пролете " +
+                                            String.format("%.3f", Astrpr) + "(см2)\n\n" +
+                                            "требуемое количество по деформациям\n в пролете " +
+                                            String.format("%.3f", Aspr) + "(см2)\n" +
+                                            "прогиб " +
+                                            String.format("%.3f", f) + "(м)\n" +
+                                            "предельно допустимый прогиб " +
+                                            String.format("%.3f", f_dop) + "(м)";
+                                }
+                                break;
+                            }
+                            case "К": {
+                                Mop = q * l * l / 2;
+                                Aoop = cal.f_Ao(Mop, Rb, b, ho);
+                                if (Aopr > 0.4) result = "Ao > 0.4";
+                                else {
+                                    t_op = cal.f_teta(Aoop);
+                                    Astrpr = (Mop * 10000) / (Rs * t_op * ho);
+                                    D = cal.f_deflection(Es, Rbser, Rb, b, ho, Astrpr);
+                                    f = qn * l * l * l * l / (185 * D);
+                                    result = "требуемое количество по прочности на опоре " +
+                                            String.format("%.3f", Astrpr) + " см2 " + " прогиб " +
+                                            String.format("%.3f", f) + " м" +
+                                            "предельно допустимый прогиб " +
+                                            String.format("%.3f", l / 75) + "(м)";
+                                }
+                                break;
+                            }
+                        }
                 }
-                //System.out.println("значение Aopr= " + Aopr);
-                //System.out.println("значение Mpr = " + Mpr);
-                break;
-            }
-            case "З-Ш" :{
-                Mpr = q * l * l / 16;
-                Aopr = Mpr / (Rb * b * ho * ho);
-                if (Aopr > 0.4) result = "Ao > 0.4";
-                else{
-                    teta = (1 + sqrt(1 - 2 * Aopr)) / 2;
-                    Astrpr = Mpr / (Rs * teta * ho);
-                    result = "требуемое количество " + String.valueOf(Astrpr) + "см2";
-                }
-                //System.out.println("значение Mpr = " + Mpr);
-                //System.out.println("значение Aopr= " + Aopr);
-                break;
-            }
-            case "Ш-Ш" :{
-                Mpr = q * l * l / 8;
-                Aopr = Mpr / (Rb * b * ho * ho);
-                if (Aopr > 0.4) result = "Ao > 0.4";
-                else{
-                    teta = (1 + sqrt(1 - 2 * Aopr)) / 2;
-                    Astrpr = Mpr / (Rs * teta * ho);
-                    result = "требуемое количество " + String.valueOf(Astrpr) + "см2";
-                }
-                //System.out.println("значение Mpr = " + Mpr);
-                //System.out.println("значение Aopr= " + Aopr);
-                break;
-            }
-            case "К" : {
-                Mpr = q * l * l / 2;
-                Aopr = Mpr / (Rb * b * ho * ho);
-                if (Aopr > 0.4) result = "Ao > 0.4";
-                else{
-                    teta = (1 + sqrt(1 - 2 * Aopr)) / 2;
-                    Astrpr = Mpr / (Rs * teta * ho);
-                    result = "требуемое количество " + String.valueOf(Astrpr) + "см2";
-                }
-                //System.out.println("значение Mpr = " + Mpr);
-                //System.out.println("значение Aopr= " + Aopr);
-                break;
-            }
-        }
         return result;
     }
-    /*public static void main (String args[]){
-        double[][] As = {{3,4,5,6,8,10,12,14,16,18,20,22,25,28,32,36,40},
-                {0.071, 0.126, 0.196, 0.283, 0.503, 0.785, 1.131, 1.539, 2.011, 2.545, 3.142, 3.801, 4.909, 6.158, 8.042, 10.179, 12.566}};
-       Rebar k1 = new Rebar();
-       k1.ProvideMy("B20","A500","З-Ш",76,70,0.3,1,4.58,0.055);
-        System.out.println("значение As l1= " + As[0].length);
-        System.out.println("значение As l2= " + As[1].length);
-
-    }*/
 }
