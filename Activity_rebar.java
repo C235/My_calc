@@ -1,7 +1,6 @@
-package com.example.my_calc;
+package com.c235.rebar_calc;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.view.KeyEvent;
@@ -16,11 +15,15 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import java.util.Arrays;
+import java.util.List;
+
 public class Activity_rebar extends AppCompatActivity {
 
-    private String[] clConcrete = {"B20", "B25", "B30"};
+    /*private String[] clConcrete = {"B20", "B25", "B30"};
     private String[] сlRebar = {"A500", "A400", "A240"};
-    private String[] boundaryСond = {"З-З", "З-Ш", "Ш-Ш", "К"};
+    private String[] boundaryСond = {"З-З", "З-Ш", "Ш-Ш", "К"};*/
+
     private Button btn_count;
     String[] hint = {"Ввести все значения", "Попробуй еще разок", "Осталось немного", "Не ленись"};
     int i = 0;
@@ -39,6 +42,10 @@ public class Activity_rebar extends AppCompatActivity {
 
         addListenerOnButton();
 
+        final Spinner spClConcrete = findViewById(R.id.sp_ClConcrete);
+        final Spinner spClRebar = findViewById(R.id.sp_ClRebar);
+        final Spinner spBoundary = findViewById(R.id.sp_BoundaryСond);
+
         final EditText eText_q = findViewById(R.id.editTextNumberDecimal_q);
         final EditText eText_qn = findViewById(R.id.editTextNumberDecimal_qn);
         final EditText eText_l = findViewById(R.id.editTextNumberDecimal_L);
@@ -46,21 +53,63 @@ public class Activity_rebar extends AppCompatActivity {
         final EditText eText_b = findViewById(R.id.editTextNumberDecimal_B);
         final EditText eText_A0 = findViewById(R.id.editTextNumberDecima_A0);
 
+        final List<String> clConcrete = Arrays.asList("B20", "B25", "B30");
+        final List<String> сlRebar = Arrays.asList("A500", "A400", "A240");
+        final List<String> boundary = Arrays.asList("З-З", "З-Ш", "Ш-Ш", "К");
+
+        ArrayAdapter adapter_ClConcrete = new ArrayAdapter(getApplicationContext(), R.layout.spinner_calc_item, clConcrete);
+        spClConcrete.setAdapter(adapter_ClConcrete);
+        adapter_ClConcrete.setDropDownViewResource(R.layout.spinner_calc_item_dropdown_item);
+
+        spClConcrete.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                sh_con = spClConcrete.getSelectedItem().toString();
+            }
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+            }
+        });
+
+        ArrayAdapter adapter_ClRebar = new ArrayAdapter(getApplicationContext(), R.layout.spinner_calc_item, сlRebar);
+        spClRebar.setAdapter(adapter_ClRebar);
+        adapter_ClRebar.setDropDownViewResource(R.layout.spinner_calc_item_dropdown_item);
+
+        spClRebar.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                sh_reb = spClRebar.getSelectedItem().toString();
+            }
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+            }
+        });
+
+        ArrayAdapter adapter_Boundary = new ArrayAdapter(getApplicationContext(), R.layout.spinner_calc_item, boundary);
+        spBoundary.setAdapter(adapter_Boundary);
+        adapter_Boundary.setDropDownViewResource(R.layout.spinner_calc_item_dropdown_item);
+
+        spBoundary.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                sh = spBoundary.getSelectedItem().toString();
+            }
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+            }
+        });
+
         /*eText_q.setOnKeyListener(new View.OnKeyListener(){
             @Override
             public boolean onKey(View v, int keyCode, KeyEvent event) {
                 if(event.getAction() == KeyEvent.ACTION_DOWN &&
-                        (keyCode == KeyEvent.KEYCODE_ENTER))
-                {
+                        (keyCode == KeyEvent.KEYCODE_ENTER)) {
                     sh_q = eText_q.getText().toString();
                     return true;
                 }
                 return false;
             }
-
         });*/
-
-
 
         eText_q.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
@@ -76,21 +125,6 @@ public class Activity_rebar extends AppCompatActivity {
             }
         });
 
-        eText_l.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if (!hasFocus) sh_l = eText_l.getText().toString();
-            }
-        });
-
-        eText_h.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if (!hasFocus) sh_h = eText_h.getText().toString();
-
-            }
-        });
-
         eText_b.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
@@ -102,42 +136,48 @@ public class Activity_rebar extends AppCompatActivity {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
                 if (!hasFocus) sh_A0 = eText_A0.getText().toString();
+                //eText_A0.clearFocus();
+                    /*if (sh_A0 != null) {
+                    eText_l.requestFocus();
+                    //getDialog().getWindow().setSoftInputMode(LayoutParams.SOFT_INPUT_STATE_VISIBLE);
+                    }*/
+            }
+        });
+
+        eText_l.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (!hasFocus) sh_l = eText_l.getText().toString();
+            }
+        });
+
+        eText_h.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (!hasFocus) {
+                    sh_h = eText_h.getText().toString();
+                    eText_h.clearFocus();
+                }
             }
         });
 
         //снятие фокуса и сркытие клавиатуры после нажатия ввод поле h
-        eText_h.setOnKeyListener(new View.OnKeyListener()
-        {
+        eText_h.setOnKeyListener(new View.OnKeyListener() {
             @Override
             public boolean onKey(View v, int keyCode, KeyEvent event) {
                 if (event.getAction() == KeyEvent.ACTION_DOWN &&
                         (keyCode == KeyEvent.KEYCODE_ENTER)) {
-                    eText_h.clearFocus();
                     //скрытие клавиатуры после набора edittext поля h
-                    Context context = v.getContext();
-                    InputMethodManager imm = (InputMethodManager) context.getSystemService(Activity.INPUT_METHOD_SERVICE);
-                    imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+                    eText_h.clearFocus();//не корректно работает в эмуляторе
+                    InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
                     return true;
                 }
                 return false;
             }
         });
-        //снятие фокуса после нажатия ввод поле A0
-        eText_A0.setOnKeyListener(new View.OnKeyListener()
-        {
-            @Override
-            public boolean onKey(View v, int keyCode, KeyEvent event) {
-                if (event.getAction() == KeyEvent.ACTION_DOWN &&
-                        (keyCode == KeyEvent.KEYCODE_ENTER)) {
-                    eText_A0.clearFocus();
-                    return true;
-                }
-                return false;
-            }
-        });
-
-        ArrayAdapter<String> clConcreteAdapter = new ArrayAdapter<String>(this,android.R.layout.simple_spinner_item,clConcrete);
-        clConcreteAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        /*ArrayAdapter<String> clConcreteAdapter = new ArrayAdapter<String>(this,R.layout.spinner_calc_item,clConcrete);
+        clConcreteAdapter.setDropDownViewResource(R.layout.spinner_calc_item_dropdown_item);
         Spinner spClConcrete = (Spinner) findViewById(R.id.sp_ClConcrete);
         spClConcrete.setAdapter(clConcreteAdapter);
 
@@ -145,15 +185,16 @@ public class Activity_rebar extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 sh_con = parent.getSelectedItem().toString();
-
             }
+
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
 
             }
         });
-        ArrayAdapter<String> clRebarAdapter = new ArrayAdapter<String>(this,android.R.layout.simple_spinner_item,сlRebar);
-        clConcreteAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+        ArrayAdapter<String> clRebarAdapter = new ArrayAdapter<String>(this,R.layout.spinner_calc_item,сlRebar);
+        clRebarAdapter.setDropDownViewResource(R.layout.spinner_calc_item_dropdown_item);
         Spinner spClRebar = (Spinner) findViewById(R.id.sp_ClRebar);
         spClRebar.setAdapter(clRebarAdapter);
 
@@ -161,7 +202,6 @@ public class Activity_rebar extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 sh_reb = parent.getSelectedItem().toString();
-
             }
 
             @Override
@@ -169,8 +209,8 @@ public class Activity_rebar extends AppCompatActivity {
 
             }
         });
-        ArrayAdapter<String> boundaryСondAdapter = new ArrayAdapter<String>(this,android.R.layout.simple_spinner_item,boundaryСond);
-        clConcreteAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        ArrayAdapter<String> boundaryСondAdapter = new ArrayAdapter<String>(this,R.layout.spinner_calc_item,boundaryСond);
+        boundaryСondAdapter.setDropDownViewResource(R.layout.spinner_calc_item_dropdown_item);
         Spinner spBoundaryСond = (Spinner) findViewById(R.id.sp_BoundaryСond);
         spBoundaryСond.setAdapter(boundaryСondAdapter);
 
@@ -178,15 +218,13 @@ public class Activity_rebar extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 sh = parent.getSelectedItem().toString();
-
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
 
             }
-        });
-
+        });*/
     }
 
     public void addListenerOnButton() {
@@ -209,5 +247,5 @@ public class Activity_rebar extends AppCompatActivity {
                                 Double.parseDouble(sh_b), Double.parseDouble(sh_l), Double.parseDouble(sh_A0)));
                     }
                 });
-    };
+    }
 }
