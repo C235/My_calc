@@ -1,4 +1,4 @@
-package com.example.my_calc;
+package com.c235.rebar_calc;
 
 import android.content.Intent;
 import android.content.SharedPreferences;

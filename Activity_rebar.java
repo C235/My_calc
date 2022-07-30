@@ -1,4 +1,4 @@
-package com.example.my_calc;
+package com.c235.rebar_calc;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;

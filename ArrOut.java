@@ -1,4 +1,4 @@
-package com.example.my_calc;
+package com.c235.rebar_calc;
 
 public class ArrOut {
     void ArrOutCon(String n, int t1[], int lent1){
